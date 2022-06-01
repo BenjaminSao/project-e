@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Project E - Home</title>
+
+        <!-- Bulma CSS Framework -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+        />
+
+        <!-- Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Icon -->
+        <script src="https://unpkg.com/feather-icons"></script>
+
+        <link rel="stylesheet" href="./home.css" />
+        <link rel="stylesheet" href="./main.css">
+    </head>
+    <body>
+        <div class="navbar-container">
+            <nav class="navbar is-fixed-top custom-navbar">
+                <div class="navbar-brand"></div>
+                <div class="navbar-menu">
+                    <div class="navbar-start">
+                        <div class="navbar-item">
+                            <h1>Project-E</h1>
+                        </div>
+                    </div>
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div
+                                class="menu-container is-clickable is-flex is-justify-content-center pt-4"
+                            >
+                                <span
+                                    data-feather="menu"
+                                    class="has-text-white"
+                                ></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <section class="section hero-section">
+            <div class="container is-fullheight is-flex is-align-items-center">
+                <div class="columns is-vcentered">
+                    <div class="column is-7">
+                        <p class="subtitle">Expense Tracking</p>
+                        <h1 class="title mb-6">
+                            The key to <br />Success is Saving
+                        </h1>
+                        <p class="mb-6">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod tempor incididunt ut labore et
+                            dolore magna aliqua.
+                        </p>
+                        <button
+                            class="button custom-button"
+                            onclick="window.location.href='login.html'"
+                        >
+                            Log In
+                        </button>
+                    </div>
+                    <div class="column">
+                        <div class="hero-container">
+                            <figure class="image spinning">
+                                <img src="images/hero-image.svg" />
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            feather.replace();
+        </script>
+    </body>
+</html>

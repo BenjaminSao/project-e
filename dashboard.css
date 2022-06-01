@@ -1,0 +1,17 @@
+.summary-box
+{
+    padding: 4rem 4rem;
+
+    background-color: #FBFBFB;
+
+    border-radius: 0.75rem;
+}
+
+.transaction-card
+{
+    padding: 2.5rem 2.5rem;
+
+    background-color: #FBFBFB;
+
+    border-radius: 0.75rem;
+}

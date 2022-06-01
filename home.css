@@ -1,0 +1,21 @@
+.hero-section
+{
+    /* Total Height Minus Navbar */
+    height: calc(100vh - 6.25rem);
+}
+
+.is-fullheight
+{
+    height: 100%;
+}
+
+/* Animation */
+.spinning
+{
+    transition: 1000ms;
+}
+
+.spinning:hover
+{
+    transform: rotateY(180deg);
+}

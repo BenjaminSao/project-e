@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Project E - Dashboard</title>
+
+        <!-- Bulma CSS Framework -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+        />
+
+        <!-- Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Icon -->
+        <script src="https://unpkg.com/feather-icons"></script>
+
+        <link rel="stylesheet" href="./dashboard.css" />
+        <link rel="stylesheet" href="./main.css" />
+
+        <!-- Vue -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <div class="navbar-container">
+                <nav class="navbar is-fixed-top custom-navbar">
+                    <div class="navbar-brand"></div>
+                    <div class="navbar-menu">
+                        <div class="navbar-start">
+                            <div class="navbar-item">
+                                <h1>Project-E</h1>
+                            </div>
+                        </div>
+                        <div class="navbar-end">
+                            <div class="navbar-item">
+                                <div
+                                    class="menu-container is-clickable is-flex is-justify-content-center pt-4"
+                                >
+                                    <span
+                                        data-feather="menu"
+                                        class="has-text-white"
+                                    ></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <section class="section">
+                <div class="container">
+                    <p class="subtitle">Welcome Back</p>
+                    <div class="summary-box">
+                        <h2 class="mb-5">{{ name }}</h2>
+                        <div class="columns is-vcentered">
+                            <div class="column is-6">
+                                <p>Spending</p>
+                                <h1 class="title">${{ spendTotal }}</h1>
+                                <p>Since</p>
+                                <h1 class="title">{{ date }}</h1>
+                            </div>
+                            <div class="column is-2"></div>
+                            <div class="column">
+                                <p>Essentials</p>
+                                <h1 class="mb-5">${{ essentialTotal }}</h1>
+                                <p>Misc.</p>
+                                <h1>${{ miscTotal }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <p class="mb-4">Actions</p>
+                    <div>
+                        <button class="button custom-button mb-5">
+                            Add Transaction
+                        </button>
+                        <button class="button custom-button">Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <p class="mb-4">Transactions</p>
+                    <div class="transactions">
+                        <div class="columns">
+                            <div
+                                class="column is-4"
+                                v-for="transaction in transactions"
+                            >
+                                <div class="transaction-card">
+                                    <div
+                                        class="is-flex is-justify-content-flex-end mb-3"
+                                    >
+                                        <span
+                                            data-feather="x"
+                                            class="has-text-black is-clickable"
+                                        ></span>
+                                    </div>
+                                    <p>Spent</p>
+                                    <h1 class="title">
+                                        ${{ transaction.spent }}
+                                    </h1>
+
+                                    <div
+                                        class="is-flex is-justify-content-space-between mb-5"
+                                    >
+                                        <div>
+                                            <p>At</p>
+                                            <h1>{{ transaction.location }}</h1>
+                                        </div>
+                                        <div
+                                            class="is-flex is-flex-direction-column is-align-items-flex-end"
+                                        >
+                                            <p>Class</p>
+                                            <h1>{{ transaction.class }}</h1>
+                                        </div>
+                                    </div>
+
+                                    <p>{{ transaction.memo }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
+            import {
+                getFirestore,
+                doc,
+                getDoc,
+            } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-firestore.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            let app = new Vue({
+                el: "#app",
+                data: {
+                    name: "Benjamin Saobuppha",
+                    spendTotal: 0,
+                    date: "May 31, 2022",
+                    essentialTotal: 0,
+                    miscTotal: 0,
+                    transactions: [
+                        {
+                            spent: 0,
+                            location: "T&T",
+                            class: "E",
+                            memo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        },
+                    ],
+                },
+                mounted() {
+                    feather.replace();
+
+                    // Your web app's Firebase configuration
+                    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyBmyLTbSw80YHmvkLwsnlXwXwifIuyA2wE",
+                        authDomain: "project-e-2cad2.firebaseapp.com",
+                        projectId: "project-e-2cad2",
+                        storageBucket: "project-e-2cad2.appspot.com",
+                        messagingSenderId: "120722518527",
+                        appId: "1:120722518527:web:55b3bfa442f945f0f5b7ca",
+                        measurementId: "G-QCF954245R",
+                    };
+
+                    // Initialize Firebase
+                    const app = initializeApp(firebaseConfig);
+                    const analytics = getAnalytics(app);
+                    const db = getFirestore(app);
+
+                    const docRef = doc(
+                        db,
+                        "user",
+                        sessionStorage.getItem("uid")
+                    );
+
+                    getDoc(docRef).then((t) => {
+                        const data = t.data();
+
+                        this.name = data.name;
+                        this.date = data.date;
+                        this.transactions = data.transactions;
+
+                        let spendTotal = 0;
+                        let essentialTotal = 0;
+                        let miscTotal = 0;
+
+                        for (let i = 0; i < this.transactions.length; i++) {
+                            spendTotal += this.transactions[i].spent;
+
+                            if (this.transactions[i].class === "E")
+                                essentialTotal += this.transactions[i].spent;
+                            else miscTotal += this.transactions[i].spent;
+                        }
+
+                        this.spendTotal = spendTotal;
+                        this.essentialTotal = essentialTotal;
+                        this.miscTotal = miscTotal;
+                    });
+                },
+            });
+        </script>
+    </body>
+</html>

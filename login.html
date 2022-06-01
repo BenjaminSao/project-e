@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login</title>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <input type="text" v-model="username" />
+            <input type="password" v-model="password" />
+            <button @click="signIn">Log In</button>
+        </div>
+
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
+            import {
+                getAuth,
+                signInWithEmailAndPassword,
+            } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-auth.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            let app = new Vue({
+                el: "#app",
+                data: {
+                    username: "",
+                    password: "",
+                },
+                mounted() {
+                    // Your web app's Firebase configuration
+                    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyBmyLTbSw80YHmvkLwsnlXwXwifIuyA2wE",
+                        authDomain: "project-e-2cad2.firebaseapp.com",
+                        projectId: "project-e-2cad2",
+                        storageBucket: "project-e-2cad2.appspot.com",
+                        messagingSenderId: "120722518527",
+                        appId: "1:120722518527:web:55b3bfa442f945f0f5b7ca",
+                        measurementId: "G-QCF954245R",
+                    };
+
+                    // Initialize Firebase
+                    const app = initializeApp(firebaseConfig);
+                    const analytics = getAnalytics(app);
+
+                    const auth = getAuth();
+                },
+                methods: {
+                    async signIn() {
+                        const auth = getAuth();
+
+                        let userData = null;
+
+                        try {
+                            userData = await signInWithEmailAndPassword(
+                                auth,
+                                this.username,
+                                this.password
+                            );
+
+                            sessionStorage.setItem("uid", userData.user.uid);
+
+                            window.location.href = "dashboard.html";
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    },
+                },
+            });
+        </script>
+    </body>
+</html>
