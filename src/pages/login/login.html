@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Login</title>
 
         <!-- Bulma CSS Framework -->
         <link
@@ -23,8 +23,8 @@
         <!-- Icon -->
         <script src="https://unpkg.com/feather-icons"></script>
 
-        <link rel="stylesheet" href="./add-transaction.css" />
-        <link rel="stylesheet" href="./main.css" />
+        <link rel="stylesheet" href="./login.css" />
+        <link rel="stylesheet" href="../main.css" />
 
         <!-- Vue -->
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -74,69 +74,34 @@
                                 <div
                                     class="is-flex is-justify-content-center mb-6"
                                 >
-                                    <h1>Add Transaction</h1>
+                                    <h1>Login</h1>
                                 </div>
                                 <div class="field">
-                                    <label class="label">Amount</label>
+                                    <label class="label">Email</label>
                                     <input
-                                        type="number"
-                                        inputmode="decimal"
+                                        type="email"
                                         class="input custom-input"
-                                        placeholder="420.69"
-                                        v-model="spent"
+                                        v-model="username"
                                     />
                                 </div>
-                                <div class="columns">
-                                    <div class="column">
-                                        <div class="field">
-                                            <label class="label"
-                                                >Location</label
-                                            >
-                                            <input
-                                                type="text"
-                                                class="input custom-input"
-                                                placeholder="Apple"
-                                                v-model="location"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="column is-narrow">
-                                        <div class="field">
-                                            <label class="label">Class</label>
-                                            <div class="select">
-                                                <select
-                                                    v-model="purchaseClass"
-                                                    class="custom-input"
-                                                >
-                                                    <option value="E">
-                                                        Essentials
-                                                    </option>
-                                                    <option value="M">
-                                                        Miscellaneous
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="field mb-5">
-                                    <label class="label">Memo</label>
-                                    <textarea
-                                        cols="30"
-                                        rows="10"
-                                        class="textarea custom-input"
-                                        v-model="memo"
-                                        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                                    ></textarea>
+                                    <label class="label">Password</label>
+                                    <input
+                                        type="password"
+                                        class="input custom-input"
+                                        v-model="password"
+                                    />
                                 </div>
+
                                 <div
                                     class="field is-flex is-justify-content-center"
                                 >
                                     <button
                                         class="button custom-button-2"
-                                        @click="addTransaction"
+                                        @click="signIn"
                                     >
-                                        Add Transaction
+                                        Login
                                     </button>
                                 </div>
                             </div>
@@ -152,24 +117,18 @@
             // Import the functions you need from the SDKs you need
             import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
             import {
-                getFirestore,
-                doc,
-                updateDoc,
-                arrayUnion,
-            } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-firestore.js";
+                getAuth,
+                signInWithEmailAndPassword,
+            } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-auth.js";
             import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-analytics.js";
             // TODO: Add SDKs for Firebase products that you want to use
             // https://firebase.google.com/docs/web/setup#available-libraries
 
-            let db;
-
             let app = new Vue({
                 el: "#app",
                 data: {
-                    spent: "",
-                    location: "",
-                    purchaseClass: "",
-                    memo: "",
+                    username: "",
+                    password: "",
                 },
                 mounted() {
                     // Your web app's Firebase configuration
@@ -187,26 +146,28 @@
                     // Initialize Firebase
                     const app = initializeApp(firebaseConfig);
                     const analytics = getAnalytics(app);
-                    db = getFirestore(app);
+
+                    const auth = getAuth();
                 },
                 methods: {
-                    addTransaction() {
-                        const docRef = doc(
-                            db,
-                            "user",
-                            sessionStorage.getItem("uid")
-                        );
+                    async signIn() {
+                        const auth = getAuth();
 
-                        updateDoc(docRef, {
-                            transactions: arrayUnion({
-                                spent: this.spent,
-                                location: this.location,
-                                class: this.purchaseClass,
-                                memo: this.memo,
-                            }),
-                        }).then(
-                            () => (window.location.href = "dashboard.html")
-                        );
+                        let userData = null;
+
+                        try {
+                            userData = await signInWithEmailAndPassword(
+                                auth,
+                                this.username,
+                                this.password
+                            );
+
+                            sessionStorage.setItem("uid", userData.user.uid);
+
+                            window.location.href = "../dashboard/dashboard.html";
+                        } catch (e) {
+                            console.error(e);
+                        }
                     },
                 },
             });
