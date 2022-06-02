@@ -71,7 +71,9 @@
                     <div class="columns is-centered">
                         <div class="column is-8">
                             <div class="form-box">
-                                <div class="is-flex is-justify-content-center mb-6">
+                                <div
+                                    class="is-flex is-justify-content-center mb-6"
+                                >
                                     <h1>Add Transaction</h1>
                                 </div>
                                 <div class="field">
@@ -81,6 +83,7 @@
                                         class="input custom-input"
                                         placeholder="420.69"
                                         v-model="spent"
+                                        pattern="\d*"
                                     />
                                 </div>
                                 <div class="columns">

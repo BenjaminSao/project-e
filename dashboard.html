@@ -94,8 +94,10 @@
                 <div class="container">
                     <p class="mb-4">Actions</p>
                     <div>
-                        <button class="button custom-button mb-5"
-                        onclick="window.location.href='add-transaction.html'">
+                        <button
+                            class="button custom-button mb-5"
+                            onclick="window.location.href='add-transaction.html'"
+                        >
                             Add Transaction
                         </button>
                         <button
@@ -246,9 +248,9 @@
                                 );
                         }
 
-                        this.spendTotal = spendTotal;
-                        this.essentialTotal = essentialTotal;
-                        this.miscTotal = miscTotal;
+                        this.spendTotal = spendTotal.toFixed(2);
+                        this.essentialTotal = essentialTotal.toFixed(2);
+                        this.miscTotal = miscTotal.toFixed(2);
                     });
                 },
                 methods: {
