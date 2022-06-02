@@ -1,9 +1,3 @@
-.hero-section
-{
-    /* Total Height Minus Navbar */
-    height: calc(100vh - 6.25rem);
-}
-
 .is-fullheight
 {
     height: 100%;
