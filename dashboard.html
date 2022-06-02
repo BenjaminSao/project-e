@@ -33,13 +33,23 @@
         <div id="app">
             <div class="navbar-container">
                 <nav class="navbar is-fixed-top custom-navbar">
-                    <div class="navbar-brand"></div>
-                    <div class="navbar-menu">
-                        <div class="navbar-start">
-                            <div class="navbar-item">
-                                <h1>Project-E</h1>
+                    <div class="navbar-brand">
+                        <div class="navbar-item">
+                            <h1>Project-E</h1>
+                        </div>
+                        <div class="navbar-burger">
+                            <div
+                                class="menu-container is-clickable is-flex is-justify-content-center pt-4"
+                            >
+                                <span
+                                    data-feather="menu"
+                                    class="has-text-white"
+                                ></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="navbar-menu">
+                        <div class="navbar-start"></div>
                         <div class="navbar-end">
                             <div class="navbar-item">
                                 <div
@@ -84,10 +94,16 @@
                 <div class="container">
                     <p class="mb-4">Actions</p>
                     <div>
-                        <button class="button custom-button mb-5">
+                        <button class="button custom-button mb-5"
+                        onclick="window.location.href='add-transaction.html'">
                             Add Transaction
                         </button>
-                        <button class="button custom-button">Reset</button>
+                        <button
+                            class="button custom-button"
+                            @click="resetTransactions"
+                        >
+                            Reset
+                        </button>
                     </div>
                 </div>
             </section>
@@ -105,10 +121,14 @@
                                     <div
                                         class="is-flex is-justify-content-flex-end mb-3"
                                     >
-                                        <span
-                                            data-feather="x"
-                                            class="has-text-black is-clickable"
-                                        ></span>
+                                        <div
+                                            @click="deleteTransaction(transaction)"
+                                        >
+                                            <span
+                                                data-feather="x"
+                                                class="has-text-black is-clickable"
+                                            ></span>
+                                        </div>
                                     </div>
                                     <p>Spent</p>
                                     <h1 class="title">
@@ -140,31 +160,37 @@
         </div>
 
         <script type="module">
+            feather.replace();
             // Import the functions you need from the SDKs you need
             import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
             import {
                 getFirestore,
                 doc,
                 getDoc,
+                updateDoc,
+                arrayRemove,
+                deleteField,
             } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-firestore.js";
             import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-analytics.js";
             // TODO: Add SDKs for Firebase products that you want to use
             // https://firebase.google.com/docs/web/setup#available-libraries
 
+            let db;
+
             let app = new Vue({
                 el: "#app",
                 data: {
-                    name: "Benjamin Saobuppha",
+                    name: "",
                     spendTotal: 0,
-                    date: "May 31, 2022",
+                    date: "",
                     essentialTotal: 0,
                     miscTotal: 0,
                     transactions: [
                         {
                             spent: 0,
-                            location: "T&T",
-                            class: "E",
-                            memo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                            location: "",
+                            class: "",
+                            memo: "",
                         },
                     ],
                 },
@@ -186,7 +212,7 @@
                     // Initialize Firebase
                     const app = initializeApp(firebaseConfig);
                     const analytics = getAnalytics(app);
-                    const db = getFirestore(app);
+                    db = getFirestore(app);
 
                     const docRef = doc(
                         db,
@@ -206,17 +232,53 @@
                         let miscTotal = 0;
 
                         for (let i = 0; i < this.transactions.length; i++) {
-                            spendTotal += this.transactions[i].spent;
+                            spendTotal += parseFloat(
+                                this.transactions[i].spent
+                            );
 
                             if (this.transactions[i].class === "E")
-                                essentialTotal += this.transactions[i].spent;
-                            else miscTotal += this.transactions[i].spent;
+                                essentialTotal += parseFloat(
+                                    this.transactions[i].spent
+                                );
+                            else
+                                miscTotal += parseFloat(
+                                    this.transactions[i].spent
+                                );
                         }
 
                         this.spendTotal = spendTotal;
                         this.essentialTotal = essentialTotal;
                         this.miscTotal = miscTotal;
                     });
+                },
+                methods: {
+                    deleteTransaction(transaction) {
+                        const docRef = doc(
+                            db,
+                            "user",
+                            sessionStorage.getItem("uid")
+                        );
+
+                        updateDoc(docRef, {
+                            transactions: arrayRemove(transaction),
+                        }).then(() => window.location.reload());
+                    },
+                    resetTransactions() {
+                        const docRef = doc(
+                            db,
+                            "user",
+                            sessionStorage.getItem("uid")
+                        );
+
+                        updateDoc(docRef, {
+                            transactions: deleteField(),
+                            date: `${new Intl.DateTimeFormat("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                            }).format(new Date())}`,
+                        }).then(() => window.location.reload());
+                    },
                 },
             });
         </script>
